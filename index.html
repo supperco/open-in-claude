@@ -10,15 +10,17 @@
   // Routes (everything lives in the URL hash, which never reaches the server):
   //   #artifact/<id>                 -> claude://claude.ai/artifact/<id>
   //   #code?folder=<path>&q=<prompt> -> claude://code/new?folder=<path>&q=<prompt>  (new Claude Code session)
+  // Prefer the hash; fall back to the query string in case a link wrapper dropped the fragment.
   var h = (location.hash || '').replace(/^#/, '');
+  if (!h && location.search) h = location.search.replace(/^\?/, '');
   var msg = document.getElementById('msg');
   var app = null, web = null;
   var m = /^artifact\/([A-Za-z0-9_-]{6,64})$/.exec(h);
   if (m) {
     app = 'claude://claude.ai/artifact/' + m[1];
     web = 'https://claude.ai/artifact/' + m[1];
-  } else if (/^code(\?|$)/.test(h)) {
-    var params = new URLSearchParams(h.replace(/^code\??/, ''));
+  } else if (/^code(\?|&|$)/.test(h)) {
+    var params = new URLSearchParams(h.replace(/^code[?&]?/, ''));
     var out = new URLSearchParams();
     params.getAll('folder').forEach(function (f) { if (f) out.append('folder', f); });
     var q = params.get('q'); if (q) out.set('q', q.slice(0, 4000));
