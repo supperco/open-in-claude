@@ -1,0 +1,21 @@
+<!doctype html>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Opening in Claude…</title>
+<style>body{font:15px -apple-system,system-ui,sans-serif;color:#333;max-width:36em;margin:4em auto;padding:0 1em}a{color:#2f6db5}</style>
+<p id="msg">Opening in the Claude app…</p>
+<script>
+(function(){
+  var h = (location.hash || '').replace(/^#/, '');
+  var m = /^artifact\/([A-Za-z0-9_-]{6,64})$/.exec(h);
+  var msg = document.getElementById('msg');
+  if (!m) { msg.textContent = 'Nothing to open.'; return; }
+  var app = 'claude://claude.ai/artifact/' + m[1];
+  var web = 'https://claude.ai/artifact/' + m[1];
+  location.replace(app);
+  setTimeout(function(){
+    msg.innerHTML = 'If the Claude app did not open, <a href="' + app + '">open it in the app</a> or <a href="' + web + '">open it in the browser</a>. You can close this tab.';
+  }, 1200);
+})();
+</script>
